@@ -1,0 +1,66 @@
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+G = (-6.6743e-11)
+m1 = (1.989e30)
+m2 = (5.972e24)
+
+"""gravitational constanct in m^3/kg*s^2
+the masses of the sun and earth in kg
+"""
+
+time = (3.154e7)
+dt = (100)
+steps = int(time/dt)
+
+"""one year in seconds broken up into 100 steps"""
+
+x1, y1 = (0, 0)
+x2, y2 = (1.47e11, 0)
+
+"""intial position of sun at the origin of x,y plane
+
+intial position of the earth on january first
+"""
+
+v1x, v1y = (0, 0)
+v2x, v2y = (0, 30051.2)
+
+"""intial velocity of the sun
+
+intial velocity of the earth using the equation v= sqrt((G*M)/r) and the intial conditions above
+"""
+
+x1_arr, y1_arr = ([x1], [y1])
+x2_arr, y2_arr = ([x2], [y2])
+
+for _ in range(steps):
+  dx = (x2 - x1)
+  dy = (y2 - y1)
+  r = np.sqrt(dx*dx + dy*dy)
+  f = ((G*m1*m2)/r*r)
+  fx = ((f*dx)/r)
+  fy = ((f*dy)/r)
+  v1x += (fx/(m1*dt))
+  v1y += (fy/(m1*dt))
+  v2x -= (fx/(m2*dt))
+  v2y -= (fy/(m2*dt))
+  x1 += (v1x*dt)
+  y1 += (v1y*dt)
+  x2 += (v2x*dt)
+  y2 += (v2y*dt)
+  x1_arr.append(x1)
+  y1_arr.append(y1)
+  x2_arr.append(x2)
+  y2_arr.append(y2)
+
+plt.figure(figsize=(10, 10))
+plt.plot(x1_arr, y1_arr, label='sun', color='yellow')
+plt.plot(x2_arr, y2_arr, label='earth', color='blue')
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
+plt.legend()
+plt.title('Earth Orbiting the Sun')
+plt.grid()
+plt.show()
